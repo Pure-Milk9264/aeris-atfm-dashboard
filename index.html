@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080f1b">
+  <title>AERIS · 空中交通智能管理</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="AERIS 首页">A<span>↗</span></a>
+    <span class="rail-label">ATFM</span>
+    <nav aria-label="视图导航">
+      <button class="nav-button active" data-view="overview" title="运行总览"><span>◈</span><small>总览</small></button>
+      <button class="nav-button" data-view="prediction" title="预测分析"><span>⌁</span><small>预测</small></button>
+      <button class="nav-button" data-view="decision" title="协同决策"><span>◇</span><small>决策</small></button>
+      <button class="nav-button" data-view="audit" title="审计日志"><span>≡</span><small>日志</small></button>
+    </nav>
+    <div class="rail-bottom"><span class="avatar">管</span><small>管制席 01</small><i class="status-dot"></i></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <div><div class="eyebrow">AERIS / AIR TRAFFIC INTELLIGENCE</div><h1>空中交通智能管理<span>运行态势中心</span></h1></div>
+      <div class="header-tools"><span class="simulation"><i></i>模拟演示 · 未接入真实数据</span><div class="clock"><strong id="clock">--:--:--</strong><small id="date"></small></div><button class="icon-button" id="fullscreen" title="切换全屏" aria-label="切换全屏">⛶</button></div>
+    </header>
+    <section class="workspace-bar"><div><span class="status-dot"></span> 西南区域空域 <span class="muted">/</span> <b id="view-title">运行总览</b><span class="tag">人机协同模式</span></div><div class="workspace-actions"><label>演示场景 <select id="scenario"><option value="storm">雷暴扰动</option><option value="normal">常态运行</option><option value="peak">高峰流量</option></select></label><button id="pause" class="text-button">Ⅱ 暂停推演</button><button id="reset" class="text-button">↻ 重置</button></div></section>
+    <section class="workflow" aria-label="人机协同决策流程" id="workflow"></section>
+    <section class="metrics" id="metrics" aria-label="运行指标"></section>
+    <section class="dashboard">
+      <div class="left-column">
+        <section class="panel sectors"><div class="panel-heading"><h2><span class="heading-mark"></span>扇区运行监测</h2><span class="tiny-label">4 SECTORS</span></div><div id="sector-list"></div><div class="panel-foot"><span class="status-dot"></span> 监测数据来自本地场景模拟</div></section>
+        <section class="panel forecast" id="forecast-panel"><div class="panel-heading"><h2><span class="heading-mark"></span>需求—容量预测</h2><span class="pill">未来 60 min</span></div><div class="chart-legend"><span><i class="cyan"></i>预测需求</span><span><i class="amber"></i>动态容量</span><span class="muted">架次 / 15min</span></div><div id="forecast-chart"></div><div class="forecast-insight" id="forecast-insight"></div><div class="confidence"><span>预测区间覆盖率 <b>90%</b></span><span>示例置信度 <b>92.6%</b></span></div></section>
+      </div>
+      <section class="panel map-panel"><div class="panel-heading"><h2><span class="heading-mark"></span>空域实时态势<span class="live-label">SIM LIVE</span></h2><div class="map-tabs"><button class="selected" data-layer="traffic">航迹</button><button class="selected" data-layer="weather">气象</button><button class="selected" data-layer="sectors">扇区</button></div></div><div class="map-toolbar"><span class="map-locator">◎ 成都终端管制区 <small>示意空域 · 非导航地图</small></span><span class="map-scale">范围 240 NM</span></div><div class="airspace" id="airspace"><svg id="airspace-svg" viewBox="0 0 800 590" role="img" aria-label="模拟成都区域航班、航线、扇区与天气态势"></svg><div class="map-coordinates">N 30°34′ &nbsp; E 104°04′<br><span>WGS 84 / SCHEMATIC</span></div><div class="map-key"><span><i class="cyan"></i>正常航班</span><span><i class="amber"></i>关注航班</span><span><i class="purple"></i>雷暴区域</span></div><div id="flight-detail" class="flight-detail" hidden></div></div><div class="map-bottom"><span><i class="status-dot"></i> 轨迹推演中 <b id="simulation-time">T +00:00</b></span><span>ADS-B / 雷达 / 气象 <em>模拟源</em></span></div></section>
+      <div class="right-column">
+        <section class="panel risk-panel"><div class="panel-heading"><h2><span class="heading-mark amber-mark"></span>AI 风险预警</h2><span class="count-badge" id="risk-count">02</span></div><div id="risk-list"></div></section>
+        <section class="panel decision-panel" id="decision-panel"><div class="panel-heading"><h2><span class="heading-mark"></span>AI 决策建议</h2><span class="pill">人工确认后执行</span></div><div class="decision-meta"><span id="plan-id">方案 ATFM-024</span><span class="review-state" id="review-state">待审核</span></div><h3 id="plan-title">扇区 S02 需求—容量平衡</h3><p class="description" id="plan-description"></p><div class="plan-options" id="plan-options"></div><div class="plan-benefits"><div><strong id="benefit-delay">−18%</strong><small>预计总延误</small></div><div><strong id="benefit-load">−24%</strong><small>预计峰值负荷</small></div><div><strong>92.6<small>%</small></strong><small>示例置信度</small></div></div><details><summary>查看推荐依据与约束 <span>＋</span></summary><p>示例输入：未来流量、扇区容量、天气影响范围。优先缓解 S02 超容，比较地面等待与改航的延误代价。所有安全校验、置信度和收益均为预设演示值，未经运行验证。</p></details><div class="review-buttons"><button id="reject" class="secondary-button">驳回建议</button><button id="approve" class="primary-button">✓ 审核并模拟执行</button></div><p class="decision-note" id="decision-note">AI 提供辅助建议，管制员保留最终决策权。</p></section>
+      </div>
+      <section class="panel audit-panel" id="audit-panel"><div class="panel-heading"><h2><span class="heading-mark"></span>协同执行与审计</h2><span class="tiny-label">SESSION LOG <span id="log-count">0</span></span></div><div class="audit-table"><table><thead><tr><th>时间</th><th>阶段</th><th>事件内容</th><th>操作来源</th><th>状态</th></tr></thead><tbody id="audit-body"></tbody></table></div></section>
+      <section class="panel takeover-panel"><div><span class="takeover-icon">⌘</span><div><h2 id="control-title">人工监督 · 系统协同</h2><p id="control-description">异常时立即冻结模拟执行，切换人工处置。</p></div></div><button id="takeover">异常接管 <span>↗</span></button></section>
+    </section>
+    <footer><span><i class="status-dot"></i> 本地演示环境 <span class="footer-divider">|</span> 无外部数据连接 <span class="footer-divider">|</span> 决策可解释 · 人工可接管 · 过程可追溯</span><span>AERIS ATFM <b>PROTOTYPE 01</b></span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <dialog id="takeover-dialog"><div class="dialog-symbol">!</div><h2>确认切换人工接管？</h2><p>将停止航迹推演，并取消尚未完成的模拟执行。监测界面保留，所有变化记录到审计日志。此操作仅影响本地演示。</p><div class="dialog-actions"><button id="cancel-takeover" class="secondary-button">返回监控</button><button id="confirm-takeover" class="danger-button">确认人工接管</button></div></dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
